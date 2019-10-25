@@ -5,8 +5,8 @@
  * Date:
  */
 
- #include "Adafruit_GFX.h"
- #include "Adafruit_SSD1306.h"
+ //#include "Adafruit_GFX.h"
+ //#include "Adafruit_SSD1306.h"
  
  //SYSTEM_MODE(SEMI_AUTOMATIC);
  //Wifi.off();
@@ -16,7 +16,7 @@
  #define OLED_DC     D4
  #define OLED_CS     D5
  #define OLED_RESET  D6
- Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
+ //Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
 
  #define NUMFLAKES 10
  #define XPOS 0
@@ -24,8 +24,8 @@
  #define DELTAY 2
 
 
- int clkPin = D1;
- int dataPin = D0;
+ int clkPin = D0;  //switch these back
+ int dataPin = D1; //
  double temperature;
 
  int tempSetpoint;
@@ -37,7 +37,7 @@
 
 void setup() {
 
-  //WiFi.setCredentials("MASTER_LAPTOP", "passwrd100");
+  WiFi.setCredentials("MASTER_LAPTOP", "passwrd100");
   WiFi.setCredentials("ATT8Vuw69R", "4t565w3ufx2r");
   Particle.variable("temp", temperature);
   Particle.variable("stat", status);
@@ -46,16 +46,16 @@ void setup() {
   Particle.function("modeC", modeControl);
   
   Serial.begin(9600);
-  display.begin(SSD1306_SWITCHCAPVCC);
+  //display.begin(SSD1306_SWITCHCAPVCC);
 
   //display startup
-  display.clearDisplay();
+  //display.clearDisplay();
   //text display tests
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setCursor(0,0);
-  display.print("Initialization...");
-  display.display();
+  //display.setTextSize(1);
+  //display.setTextColor(WHITE);
+  //display.setCursor(0,0);
+  //display.print("Initialization...");
+  //display.display();
 
   delay(500);
 
@@ -73,11 +73,11 @@ void setup() {
 
 void loop() {
 
-	tempSetpointAnalog = analogRead(A6);//get setpoint for temp
+	tempSetpointAnalog = analogRead(A5);//get setpoint for temp  // was A6
 	tempSetpoint = map(tempSetpointAnalog, 0, 4095, 75, 90);
 
 	temperature = getTemperatureF();//get temp and convert
-    displayTemperature(temperature);// display temp
+  //displayTemperature(temperature);// display temp
 	
 	val = digitalRead(A4);//change mode
 	if(val){
@@ -92,14 +92,15 @@ void loop() {
 
 }
 
+/*
 int modeControl(String command){
     mode += 1;
 	mode = mode % 3;
     return 1;
 }
+*/
 
 
-/*
 int modeControl(String command){
         if(command == "zero"){
             mode = 0;
@@ -117,7 +118,7 @@ int modeControl(String command){
             return -1;
         }
 }
-*/
+
 
 
 void controlFan(){
@@ -153,6 +154,7 @@ double  getTemperatureF(){
 	return temperature;
 }
 
+/*
 void displayTemperature(double temperature){
 
   display.clearDisplay();
@@ -178,7 +180,7 @@ void displayTemperature(double temperature){
 
   display.display();
 }
-
+*/
 
 
 double readTemperatureRaw(){
