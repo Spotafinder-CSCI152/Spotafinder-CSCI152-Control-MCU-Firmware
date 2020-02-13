@@ -4,19 +4,21 @@
  * Author:
  * Date:
  */
+//
+//CURRENT CODE TARGETS PARTICLE CORE FIRMWARE V1.0.1
+//Use CLI to compile and flash
+ #include "Adafruit_GFX.h"
+ #include "Adafruit_SSD1306.h"
 
- //#include "Adafruit_GFX.h"
- //#include "Adafruit_SSD1306.h"
- 
  //SYSTEM_MODE(SEMI_AUTOMATIC);
  //Wifi.off();
- 
+
  #define OLED_MOSI   D2
  #define OLED_CLK    D3
  #define OLED_DC     D4
  #define OLED_CS     D5
  #define OLED_RESET  D6
- //Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
+ Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
 
  #define NUMFLAKES 10
  #define XPOS 0
@@ -24,8 +26,8 @@
  #define DELTAY 2
 
 
- int clkPin = D0;  //switch these back
- int dataPin = D1; //
+ int clkPin = D1;  //core D1 is clock
+ int dataPin = D0; //
  double temperature;
 
  int tempSetpoint;
@@ -42,20 +44,21 @@ void setup() {
   Particle.variable("temp", temperature);
   Particle.variable("stat", status);
   Particle.variable("mode", mode);
-  
-  Particle.function("modeC", modeControl);
-  
-  Serial.begin(9600);
-  //display.begin(SSD1306_SWITCHCAPVCC);
 
-  //display startup
-  //display.clearDisplay();
-  //text display tests
-  //display.setTextSize(1);
-  //display.setTextColor(WHITE);
-  //display.setCursor(0,0);
-  //display.print("Initialization...");
-  //display.display();
+  Particle.function("modeC", modeControl);
+
+  Serial.begin(9600);
+
+  display.begin(SSD1306_SWITCHCAPVCC);
+
+  ///display startup
+  display.clearDisplay();
+  ///text display tests
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0,0);
+  display.print("Initialization...");
+  display.display();
 
   delay(500);
 
@@ -73,12 +76,12 @@ void setup() {
 
 void loop() {
 
-	tempSetpointAnalog = analogRead(A5);//get setpoint for temp  // was A6
+	tempSetpointAnalog = analogRead(A6);//get setpoint for temp  // core is A6
 	tempSetpoint = map(tempSetpointAnalog, 0, 4095, 75, 90);
 
 	temperature = getTemperatureF();//get temp and convert
-  //displayTemperature(temperature);// display temp
-	
+  displayTemperature(temperature);// display temp
+
 	val = digitalRead(A4);//change mode
 	if(val){
 		mode += 1;
@@ -131,18 +134,26 @@ void controlFan(){
 		status = 1;
 	}
 	if(mode == 2){//auto
-		if(abs(tempSetpoint - (int)temperature) >= 2){//if temp is off by 2 deg then
+
+		if(abs(tempSetpoint - (int)temperature) >= 1){//if temp is off by 1 deg then
 			if((int)temperature > tempSetpoint && status == 1){//if temp too high && fan on
+
+    /*if(abs((double)tempSetpoint - temperature) >= 1.5){//if temp is off by 1.5 deg then
+      if(temperature > (double)tempSetpoint && status == 1){//if temp too high && fan on
+      */
 				digitalWrite(D7,0);//turn off fan
 				status = 0;
 			}
 			if((int)temperature < tempSetpoint && status == 0){//if temp too low && fan off
+
+      //if(temperature < (double)tempSetpoint && status == 0){//if temp too low && fan off
+
 				digitalWrite(D7,1);//turn on fan
 				status = 1;
 			}
 		}
 	}
-	
+
 }
 
 
@@ -154,7 +165,7 @@ double  getTemperatureF(){
 	return temperature;
 }
 
-/*
+
 void displayTemperature(double temperature){
 
   display.clearDisplay();
@@ -180,7 +191,7 @@ void displayTemperature(double temperature){
 
   display.display();
 }
-*/
+
 
 
 double readTemperatureRaw(){
