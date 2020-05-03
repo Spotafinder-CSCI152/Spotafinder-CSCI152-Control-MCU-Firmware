@@ -37,7 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 
 static const unsigned char font[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00,
 	0x3E, 0x5B, 0x4F, 0x5B, 0x3E,
 	0x3E, 0x6B, 0x4F, 0x6B, 0x3E,
 	0x1C, 0x3E, 0x7C, 0x3E, 0x1C,
@@ -294,15 +294,15 @@ static const unsigned char font[] = {
 	0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-Adafruit_GFX::Adafruit_GFX(int16_t w, int16_t h):
-  WIDTH(w), HEIGHT(h){
+Adafruit_GFX::Adafruit_GFX(int16_t w, int16_t h):WIDTH(w), HEIGHT(h){
   _width    = WIDTH;
   _height   = HEIGHT;
   rotation  = 0;
-  cursor_y  = cursor_x    = 0;
+  cursor_y  = cursor_x = 0;
   textsize  = 1;
   textcolor = textbgcolor = 0xFFFF;
-  wrap      = true;}
+  wrap      = true;
+  }
 
 
 /*
@@ -414,6 +414,7 @@ void Adafruit_GFX::fillCircleHelper(int16_t x0, int16_t y0, int16_t r,
     }
   }
 }
+*/
 
 // Bresenham's algorithm - thx wikpedia
 void Adafruit_GFX::drawLine(int16_t x0, int16_t y0,
@@ -457,6 +458,7 @@ void Adafruit_GFX::drawLine(int16_t x0, int16_t y0,
   }
 }
 
+/*
 // Draw a rectangle
 void Adafruit_GFX::drawRect(int16_t x, int16_t y,
 			    int16_t w, int16_t h,
@@ -467,6 +469,7 @@ void Adafruit_GFX::drawRect(int16_t x, int16_t y,
   drawFastVLine(x+w-1, y, h, color);
 }
 
+*/
 void Adafruit_GFX::drawFastVLine(int16_t x, int16_t y,
 				 int16_t h, uint16_t color) {
   // Update in subclasses if desired!
@@ -478,7 +481,7 @@ void Adafruit_GFX::drawFastHLine(int16_t x, int16_t y,
   // Update in subclasses if desired!
   drawLine(x, y, x+w-1, y, color);
 }
-*/
+
 
 void Adafruit_GFX::fillRect(int16_t x, int16_t y, int16_t w, int16_t h,
 			    uint16_t color) {
