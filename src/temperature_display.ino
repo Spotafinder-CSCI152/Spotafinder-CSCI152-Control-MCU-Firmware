@@ -21,7 +21,7 @@
 #define ModePin A5
 #define FanPin  A3
 
-#define RefreshRate 2000
+#define RefreshRate 5000
 
 Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
 SHT15 sensorSHT15(D9, D10);
@@ -43,10 +43,10 @@ void setup() {
 
   WiFi.setCredentials("MASTER_LAPTOP", "passwrd100");
   WiFi.setCredentials("ATT8Vuw69R", "4t565w3ufx2r");
-  // Particle.variable("temp", temperature);
-  // Particle.variable("stat", status);
-  // Particle.variable("mode", mode);
-  // Particle.function("modeC", modeControl);
+  Particle.variable("temp", temperature);
+  Particle.variable("stat", status);
+  Particle.variable("mode", mode);
+  Particle.function("modeC", modeControl);
 
   Serial.begin(9600);
 
@@ -78,8 +78,8 @@ void loop() {
   tempSetpoint = map(tempSetpointAnalog, 0, 4095, 75, 90);
 
   
-  temperature = sensorSHT15.getTemperatureF();  // get temp and convert
-  displayTemperature(temperature);              // display temp
+  temperature = sensorSHT15.getTemperatureF();  // get tempF
+  displayTemperature(temperature);              // display tempF
 
   val = digitalRead(ModePin);  // change mode
   if (val) {
@@ -93,13 +93,6 @@ void loop() {
   delay(10);
 }
 
-/*
-int modeControl(String command){
-    mode += 1;
-        mode = mode % 3;
-    return 1;
-}
-*/
 
 int modeControl(String command) {
   if (command == "0") {
@@ -132,18 +125,11 @@ void controlFan() {
       if ((int)temperature > tempSetpoint &&
           status == 1) {  // if temp too high && fan on
 
-        /*if(abs((double)tempSetpoint - temperature) >= 1.5){//if temp is off
-      by 1.5 deg then if(temperature > (double)tempSetpoint && status == 1){//if
-      temp too high && fan on
-      */
         digitalWrite(FanPin, 0);  // turn off fan
         status = 0;
       }
       if ((int)temperature < tempSetpoint &&
           status == 0) {  // if temp too low && fan off
-
-        // if(temperature < (double)tempSetpoint && status == 0){//if temp too
-        // low && fan off
 
         digitalWrite(FanPin, 1);  // turn on fan
         status = 1;
