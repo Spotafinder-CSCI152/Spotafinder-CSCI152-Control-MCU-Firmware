@@ -33,7 +33,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "Adafruit_GFX.h"
 
-#define pgm_read_byte(addr) (*(const unsigned char *)(addr))
+//#define pgm_read_byte(addr) (*(const unsigned char *)(addr))
 
 
 static const unsigned char font[] = {
@@ -295,16 +295,14 @@ static const unsigned char font[] = {
 };
 
 Adafruit_GFX::Adafruit_GFX(int16_t w, int16_t h):
-  WIDTH(w), HEIGHT(h)
-{
+  WIDTH(w), HEIGHT(h){
   _width    = WIDTH;
   _height   = HEIGHT;
   rotation  = 0;
   cursor_y  = cursor_x    = 0;
   textsize  = 1;
   textcolor = textbgcolor = 0xFFFF;
-  wrap      = true;
-}
+  wrap      = true;}
 
 
 /*
@@ -583,7 +581,7 @@ void Adafruit_GFX::fillTriangle ( int16_t x0, int16_t y0,
     sa += dx01;
     sb += dx02;
 	
-    /* longhand:
+   longhand:
     a = x0 + (x1 - x0) * (y - y0) / (y1 - y0);
     b = x0 + (x2 - x0) * (y - y0) / (y2 - y0);
 	
